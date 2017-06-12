@@ -151,3 +151,13 @@ stamp-h[1-9]
 /libfdatetime
 /libfguid
 /libuna
+
+# Build results
+[Dd]ebug/
+[Vv][Ss][Dd]ebug/
+[Rr]elease/
+
+# Visual Studio 2015 cache/options directory
+.vs/
+
+
