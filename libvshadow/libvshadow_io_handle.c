@@ -882,7 +882,8 @@ int libvshadow_io_handle_read_catalog(
 		catalog_block_offset = sizeof( vshadow_catalog_header_t );
 		catalog_block_size  -= sizeof( vshadow_catalog_header_t );
 
-		while( catalog_block_offset < catalog_block_size )
+		//while( catalog_block_offset < catalog_block_size )
+		while (catalog_block_size > 0)
 		{
 			if( store_descriptor == NULL )
 			{
