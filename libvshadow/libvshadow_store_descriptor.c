@@ -705,6 +705,21 @@ int libvshadow_store_descriptor_read_catalog_entry(
 	}
 	else if( *entry_type == 3 )
 	{
+		if( memory_copy(
+		     store_descriptor->identifier,
+		     &( catalog_block_data[ 16 ] ),
+		     16 ) == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_MEMORY,
+			 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
+			 "%s: unable to copy identifier.",
+			 function );
+
+			goto on_error;
+		}
+
 		byte_stream_copy_to_uint64_little_endian(
 		 &( catalog_block_data[ 8 ] ),
 		 store_descriptor->store_block_list_offset );
@@ -1190,7 +1205,7 @@ int libvshadow_store_descriptor_read_store_header(
 			 "%s: unable to print UTF-16 string value.",
 			 function );
 
-			goto on_error;
+			//goto on_error; /// NOTE: sometimes return invalid length of service_machine_string_size.
 		}
 	}
 #endif

@@ -962,8 +962,8 @@ int libvshadow_io_handle_read_catalog(
 			}
 			else if( catalog_entry_type == 3 )
 			{
-				if( ( last_store_descriptor != NULL )
-				 && ( memory_compare(
+				if( ( last_store_descriptor == NULL )
+				 || ( memory_compare(
 				       store_descriptor->identifier,
 				       last_store_descriptor->identifier,
 				       16 ) != 0 ) )
@@ -976,7 +976,7 @@ int libvshadow_io_handle_read_catalog(
 					          error );
 
 					if( result != 1 )
-					    last_store_descriptor = NULL;
+						last_store_descriptor = NULL;
 				}
 
 /* TODO look for the last store decriptor ? */
@@ -991,21 +991,6 @@ int libvshadow_io_handle_read_catalog(
 				}
 				else
 				{
-					if( memory_copy(
-						store_descriptor->identifier,
-						&( catalog_block_data[ catalog_block_offset + 16 ] ),
-						16 ) == NULL )
-						{
-							libcerror_error_set(
-								error,
-								LIBCERROR_ERROR_DOMAIN_MEMORY,
-								LIBCERROR_MEMORY_ERROR_COPY_FAILED,
-								"%s: unable to copy identifier.",
-								function );
-
-							goto on_error;
-					}
-
 					store_descriptor->volume_size = *volume_size;
 					store_descriptor->has_in_volume_store_data  = 1;
 
