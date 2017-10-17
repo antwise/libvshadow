@@ -104,7 +104,7 @@ struct libvshadow_store_descriptor
 
 	/* The block descriptors list
 	 */
-	libcdata_list_t *block_descriptors_list;
+	libcdata_array_t *block_descriptors_array;
 
 	/* The forward block descriptors B-tree
 	 */
