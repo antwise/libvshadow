@@ -199,6 +199,17 @@ typedef int64_t off64_t;
 
 #endif
 
+typedef struct libvshadow_blocks_iterator libvshadow_blocks_iterator_t;
+
+struct libvshadow_blocks_iterator
+{
+    off64_t original_offset;
+    off64_t relative_offset;
+    off64_t offset;
+    uint32_t flags;
+    uint32_t bitmap;
+};
+
 /* The following type definitions hide internal data structures
  */
 typedef intptr_t libvshadow_block_t;

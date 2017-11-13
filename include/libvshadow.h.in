@@ -459,6 +459,30 @@ int libvshadow_store_get_block_by_index(
      libvshadow_block_t **block,
      libvshadow_error_t **error );
 
+/* Create iterator of blocks
+ * Returns iterator if successful or NULL on error
+ */
+LIBVSHADOW_EXTERN \
+libvshadow_blocks_iterator_t* libvshadow_blocks_iterator_create(
+     libvshadow_store_t *store,
+     libvshadow_error_t **error );
+
+/* Get next block
+ * Returns next iterator if successful or NULL on error
+ */
+LIBVSHADOW_EXTERN \
+libvshadow_blocks_iterator_t* libvshadow_blocks_iterator_next(
+     libvshadow_blocks_iterator_t *iterator,
+     libvshadow_error_t **error );
+
+/* Remove iterator
+ * Returns 1 if successful or -1 on error
+ */
+LIBVSHADOW_EXTERN \
+int libvshadow_blocks_iterator_free(
+     libvshadow_blocks_iterator_t **iterator,
+     libvshadow_error_t **error );
+	 
 /* -------------------------------------------------------------------------
  * Block functions
  * ------------------------------------------------------------------------- */

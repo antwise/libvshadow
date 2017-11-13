@@ -104,6 +104,7 @@
     <ClCompile Include="..\..\libvshadow\libvshadow_notify.c" />
     <ClCompile Include="..\..\libvshadow\libvshadow_store.c" />
     <ClCompile Include="..\..\libvshadow\libvshadow_store_block.c" />
+    <ClCompile Include="..\..\libvshadow\libvshadow_store_blocks_iterator.c" />
     <ClCompile Include="..\..\libvshadow\libvshadow_store_descriptor.c" />
     <ClCompile Include="..\..\libvshadow\libvshadow_support.c" />
     <ClCompile Include="..\..\libvshadow\libvshadow_volume.c" />
@@ -132,6 +133,7 @@
     <ClInclude Include="..\..\libvshadow\libvshadow_notify.h" />
     <ClInclude Include="..\..\libvshadow\libvshadow_store.h" />
     <ClInclude Include="..\..\libvshadow\libvshadow_store_block.h" />
+    <ClInclude Include="..\..\libvshadow\libvshadow_store_blocks_iterator.h" />
     <ClInclude Include="..\..\libvshadow\libvshadow_store_descriptor.h" />
     <ClInclude Include="..\..\libvshadow\libvshadow_support.h" />
     <ClInclude Include="..\..\libvshadow\libvshadow_types.h" />

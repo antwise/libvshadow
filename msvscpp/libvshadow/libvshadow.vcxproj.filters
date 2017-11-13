@@ -57,6 +57,9 @@
     <ClCompile Include="..\..\libvshadow\libvshadow_volume.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\libvshadow\libvshadow_store_blocks_iterator.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\libvshadow\libvshadow_block.h">
@@ -150,6 +153,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\libvshadow\vshadow_volume.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\libvshadow\libvshadow_store_blocks_iterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
