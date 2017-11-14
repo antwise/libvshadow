@@ -925,8 +925,8 @@ int libvshadow_io_handle_read_catalog(
 				     store_descriptors_array,
 				     &store_descriptor_index,
 				     (intptr_t *) store_descriptor,
-				     (int(*)(intptr_t *, intptr_t *, libcerror_error_t **)) &libvshadow_store_descriptor_compare_by_creation_time,
-				     LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+					 (int(*)(intptr_t *, intptr_t *, libcerror_error_t **)) &libvshadow_store_descriptor_compare_by_order,
+-				     LIBCDATA_INSERT_FLAG_NON_UNIQUE_ENTRIES,
 				     error ) != 1 )
 				{
 					libcerror_error_set(

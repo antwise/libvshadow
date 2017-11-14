@@ -52,6 +52,10 @@ struct libvshadow_store_descriptor
 	 */
 	uint64_t creation_time;
 
+	/* The order
+	 */
+	uint64_t order;
+
 	/* The store header offset
 	 */
 	off64_t store_header_offset;
@@ -162,6 +166,11 @@ int libvshadow_store_descriptor_has_in_volume_data(
      libcerror_error_t **error );
 
 int libvshadow_store_descriptor_compare_by_creation_time(
+     libvshadow_store_descriptor_t *first_store_descriptor,
+     libvshadow_store_descriptor_t *second_store_descriptor,
+     libcerror_error_t **error );
+
+int libvshadow_store_descriptor_compare_by_order(
      libvshadow_store_descriptor_t *first_store_descriptor,
      libvshadow_store_descriptor_t *second_store_descriptor,
      libcerror_error_t **error );

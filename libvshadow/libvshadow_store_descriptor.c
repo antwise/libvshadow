@@ -422,6 +422,48 @@ int libvshadow_store_descriptor_compare_by_creation_time(
 	return( LIBCDATA_COMPARE_EQUAL );
 }
 
+/* Compares 2 store descriptors by their order
+ * Returns LIBCDATA_COMPARE_LESS, LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
+ */
+int libvshadow_store_descriptor_compare_by_order(
+     libvshadow_store_descriptor_t *first_store_descriptor,
+     libvshadow_store_descriptor_t *second_store_descriptor,
+     libcerror_error_t **error )
+{
+	static char *function = "libvshadow_store_descriptor_compare_by_order";
+
+	if( first_store_descriptor == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid first store descriptor.",
+		 function );
+
+		return( -1 );
+	}
+	if( second_store_descriptor == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid second store descriptor.",
+		 function );
+
+		return( -1 );
+	}
+	if( first_store_descriptor->order < second_store_descriptor->order )
+	{
+		return( LIBCDATA_COMPARE_LESS );
+	}
+	else if( first_store_descriptor->order > second_store_descriptor->order )
+	{
+		return( LIBCDATA_COMPARE_GREATER );
+	}
+	return( LIBCDATA_COMPARE_EQUAL );
+}
 /* Compares 2 store descriptors by their identifier
  * Returns LIBCDATA_COMPARE_LESS, LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
  */
@@ -633,6 +675,10 @@ int libvshadow_store_descriptor_read_catalog_entry(
 		 &( catalog_block_data[ 48 ] ),
 		 store_descriptor->creation_time );
 
+		byte_stream_copy_to_uint64_little_endian(
+			 &( catalog_block_data[ 32 ] ),
+			 store_descriptor->order );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
@@ -659,13 +705,11 @@ int libvshadow_store_descriptor_read_catalog_entry(
 
 				goto on_error;
 			}
-			byte_stream_copy_to_uint64_little_endian(
-			 &( catalog_block_data[ 32 ] ),
-			 value_64bit );
+
 			libcnotify_printf(
-			 "%s: unknown2\t\t\t: %" PRIu64 "\n",
+			 "%s: Order\t\t\t: %" PRIu64 "\n",
 			 function,
-			 value_64bit );
+			 store_descriptor->order);
 
 			byte_stream_copy_to_uint64_little_endian(
 			 &( catalog_block_data[ 40 ] ),
