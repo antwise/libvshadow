@@ -66,6 +66,14 @@ struct libvshadow_blocks_iterator_internal
 	 */
 	off64_t next_offset;
 
+	/* The offset of buffer reading
+	 */
+	off64_t buffer_offset;
+
+	/* The buffer size
+	 */
+	ssize_t buffer_size;
+
 	/* The block data
 	 */
 	uint8_t *block_data;

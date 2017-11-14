@@ -34,6 +34,9 @@
 
 #include "vshadow_store.h"
 
+#define BLOCK_SIZE (0x4000) // 16Kb
+#define BUFFER_SIZE (10*BLOCK_SIZE) /// NOTE: if very big, than more loose over buffer
+
 static int libvshadow_store_blocks_iterator_data_free(
 	libvshadow_blocks_iterator_internal_t *iterator,
 	libcerror_error_t **error )
@@ -178,7 +181,7 @@ libvshadow_blocks_iterator_internal_t* libvshadow_store_blocks_iterator_create(
 
 	if( libvshadow_store_block_initialize(
 		&result->store_block,
-		0x4000,
+		BUFFER_SIZE,
 		error ) != 1 )
 	{
 		libcerror_error_set(
@@ -220,6 +223,8 @@ libvshadow_blocks_iterator_internal_t* libvshadow_store_blocks_iterator_next(
 {
 	static char *function                          = "libvshadow_store_blocks_iterator_next";
 	int result                                     = 0;
+	off64_t offset_store_data                      = 0;
+
 	while(result == 0) // while read empty records
 	{
 		while(iterator->block_size < sizeof( vshadow_store_block_list_entry_t )) // read store block
@@ -230,19 +235,63 @@ libvshadow_blocks_iterator_internal_t* libvshadow_store_blocks_iterator_next(
 				return( NULL );
 			}
 
-			if( libvshadow_store_block_read(
+			if( iterator->buffer_size <= 0 ||
+				iterator->next_offset < iterator->buffer_offset ||
+				iterator->buffer_offset + iterator->buffer_size - BLOCK_SIZE < iterator->next_offset) // data not in buffer
+			{
+				if( libbfio_handle_seek_offset(
+					iterator->file_io_handle,
+					iterator->next_offset,
+					SEEK_SET,
+					error ) == -1 )
+				{
+					libcerror_error_set(
+						error,
+						LIBCERROR_ERROR_DOMAIN_IO,
+						LIBCERROR_IO_ERROR_SEEK_FAILED,
+						"%s: unable to seek store block offset: %" PRIi64 ".",
+						function,
+						iterator->next_offset );
+
+					libvshadow_store_blocks_iterator_data_free( iterator, error );
+					return( NULL );
+				}
+
+				iterator->buffer_size = libbfio_handle_read_buffer(
+					iterator->file_io_handle,
+					iterator->store_block->data,
+					iterator->store_block->data_size,
+					error );
+
+				if( iterator->buffer_size < BLOCK_SIZE )
+				{
+					libcerror_error_set(
+						error,
+						LIBCERROR_ERROR_DOMAIN_IO,
+						LIBCERROR_IO_ERROR_READ_FAILED,
+						"%s: unable to read store block data.",
+						function );
+
+					libvshadow_store_blocks_iterator_data_free( iterator, error );
+					return( NULL );
+				}
+
+				iterator->buffer_offset = iterator->next_offset;
+			}
+
+			offset_store_data = iterator->next_offset - iterator->buffer_offset;
+			if( libvshadow_store_block_read_header_data(
 				iterator->store_block,
-				iterator->file_io_handle,
-				iterator->next_offset,
-				error ) == -1 )
+				&( iterator->store_block->data[ offset_store_data ] ),
+				BLOCK_SIZE,
+				error ) != 1 )
 			{
 				libcerror_error_set(
 					error,
 					LIBCERROR_ERROR_DOMAIN_IO,
 					LIBCERROR_IO_ERROR_READ_FAILED,
-					"%s: unable to read store block at offset: %" PRIi64 ".",
-					function,
-					iterator->next_offset );
+					"%s: unable to read store block header.",
+					function );
 
 				libvshadow_store_blocks_iterator_data_free( iterator, error );
 				return( NULL );
@@ -263,8 +312,8 @@ libvshadow_blocks_iterator_internal_t* libvshadow_store_blocks_iterator_next(
 			}
 
 			iterator->next_offset = iterator->store_block->next_offset;	
-			iterator->block_data = &( iterator->store_block->data[ sizeof( vshadow_store_block_header_t ) ] );
-			iterator->block_size = (uint16_t) ( iterator->store_block->data_size - sizeof( vshadow_store_block_header_t ) );
+			iterator->block_data = &( iterator->store_block->data[ offset_store_data + sizeof( vshadow_store_block_header_t ) ] );
+			iterator->block_size = (uint16_t) ( BLOCK_SIZE - sizeof( vshadow_store_block_header_t ) );
 		} // while read store block ... 
 
 		while( sizeof( vshadow_store_block_list_entry_t ) <= iterator->block_size && result == 0) // read data blocks in store block
